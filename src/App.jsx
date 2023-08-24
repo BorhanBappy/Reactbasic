@@ -1,16 +1,13 @@
-function App() {
-  let status = true;
+import Hero from "./component/hero";
+
+const App = () => {
+  const BtnClick = () => {
+    alert("Say Hello");
+  };
   return (
     <div>
-      <h1>Login Status</h1>
-      {(() => {
-        return status ? (
-          <button>Logout Btn</button>
-        ) : (
-          <button>Login Btn</button>
-        );
-      })()}
+      <Hero ChildBtnClick={BtnClick} />
     </div>
   );
-}
+};
 export default App;

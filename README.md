@@ -8,6 +8,10 @@
   - [Using Ternary Operator](#using-ternary-operator)
   - [Conditional Rendering](#conditional-rendering-1)
   - [Conditional Rendering using IIF](#conditional-rendering-using-iif)
+- [Child Component](#child-component)
+  - [Child Component string Pass](#child-component-string-pass)
+  - [Child component Object pass](#child-component-object-pass)
+  - [Child Component Function Pass](#child-component-function-pass)
 
 # Ternary Operator
 
@@ -65,7 +69,7 @@ function App() {
         <ol>
           {city.map((item, i) => {
             return <li key={i}>{item}</li>;
-            return <li key={i.toString()}>{item}</li>;
+            // return <li key={i.toString()}>{item}</li>;
 
           })}
         </ol>
@@ -192,4 +196,108 @@ function App() {
 }
 export default App;
 ```
+# Child Component
+ ## Child Component string Pass
 
+
+```javascript
+// App.jsx file
+
+import Hero from "./component/hero";
+
+const App = () => {
+  return (
+    <div>
+      <Hero title="Learn React" des="Please tel details the props" />
+    </div>
+  );
+};
+export default App;
+
+
+//  Hero.jsx File
+const Hero = (props) => {
+  return (
+    <div>
+      <h1>{props.title}</h1>
+      <p>{props.des}</p>
+    </div>
+  );
+};
+
+export default Hero;
+```
+
+## Child component Object pass 
+
+
+
+```javascript
+import Hero from "./component/hero";
+
+const App = () => {
+  const Item = { name: "Borhan Uddin Bappy", age: 33, city: "Dhaka" };
+  return (
+    <div>
+      <Hero item={Item} />
+    </div>
+  );
+};
+export default App;
+
+const Hero = (props) => {
+  return (
+    <div>
+      <ul>
+        <li>Name:{props.item["name"]}</li>
+        <li>Age:{props.item["age"]}</li>
+        <li>City:{props.item["city"]}</li>
+      </ul>
+    </div>
+  );
+};
+
+export default Hero;
+
+
+
+// Using Destructring
+
+const Hero = ({ item }) => {
+  const { name, age, city } = item;
+  return (
+    <div>
+  
+    </div>
+  );
+};
+
+export default Hero;
+```
+## Child Component Function Pass
+
+```javascript
+import Hero from "./component/hero";
+
+const App = () => {
+  const BtnClick = () => {
+    alert("Say Hello");
+  };
+  return (
+    <div>
+      <Hero ChildBtnClick={BtnClick} />
+    </div>
+  );
+};
+export default App;
+
+const Hero = (props) => {
+  return (
+    <div>
+      <button onClick={props.ChildBtnClick}>Submit</button>
+    </div>
+  );
+};
+
+export default Hero;
+```
