@@ -1,3 +1,14 @@
+- [Ternary Operator](#ternary-operator)
+- [Immediately-Invoked](#immediately-invoked)
+- [Loop Using Map](#loop-using-map)
+- [Conditional Rendering](#conditional-rendering)
+  - [Using If - Else](#using-if---else)
+    - [Here is problem code repeat for Fixed used Function.](#here-is-problem-code-repeat-for-fixed-used-function)
+  - [Switch Case](#switch-case)
+  - [Using Ternary Operator](#using-ternary-operator)
+  - [Conditional Rendering](#conditional-rendering-1)
+  - [Conditional Rendering using IIF](#conditional-rendering-using-iif)
+
 # Ternary Operator
 
 ```javascript
