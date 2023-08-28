@@ -1,9 +1,5 @@
-const Hero = (props) => {
-  return (
-    <div>
-      <button onClick={props.ChildBtnClick}>Submit</button>
-    </div>
-  );
+const Hero = () => {
+  return <div></div>;
 };
 
 export default Hero;

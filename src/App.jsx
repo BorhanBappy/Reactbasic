@@ -1,13 +1,13 @@
-import Hero from "./component/hero";
+import { useEffect, useState } from "react";
+import DataFetch from "./component/datafetch";
+export default function App() {
+  
 
-const App = () => {
-  const BtnClick = () => {
-    alert("Say Hello");
-  };
+  // console.log(result);  // This will output:
+
   return (
     <div>
-      <Hero ChildBtnClick={BtnClick} />
+      <DataFetch />
     </div>
   );
-};
-export default App;
+}
