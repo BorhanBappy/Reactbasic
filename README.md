@@ -18,15 +18,23 @@
   - [Managing Form submit](#managing-form-submit)
 - [HooK](#hook)
   - [useRef](#useref)
-  - [Using useRef Attribute Manipulate](#using-useref-attribute-manipulate)
+  - [Use Ref using for DOM Manipulate.](#use-ref-using-for-dom-manipulate)
+    - [Using Reference Hook for DOM Manipulate](#using-reference-hook-for-dom-manipulate)
+    - [Using useRef Image Attribute Manipulate](#using-useref-image-attribute-manipulate)
+    - [UseRef input Value](#useref-input-value)
+    - [UseRef Method Create Persisted Mutable Values](#useref-method-create-persisted-mutable-values)
+    - [useRef Caching expensive computations](#useref-caching-expensive-computations)
   - [Use State](#use-state)
     - [Number Change](#number-change)
+  - [UseState using change useRef](#usestate-using-change-useref)
   - [Use State Todo](#use-state-todo)
 - [Use Effect](#use-effect)
   - [Without Dependency](#without-dependency)
   - [with Dependency Empty](#with-dependency-empty)
   - [with Dependency with Variable](#with-dependency-with-variable)
     - [Data Fetch](#data-fetch)
+- [UseEffect using async function](#useeffect-using-async-function)
+- [Visible and Usememo](#visible-and-usememo)
 
 # Ternary Operator
 
@@ -102,7 +110,7 @@ export default App;
 
 ```javascript
 function App() {
-  const Status = true;
+  const Status = false;
   if (Status == true) {
     return (
       <div>
@@ -388,7 +396,7 @@ export default App;
 
 ## useRef
 
-- Use Ref using for DOM Manipulate.
+## Use Ref using for DOM Manipulate.
 
 ```javascript
 const App = () => {
@@ -403,9 +411,12 @@ const App = () => {
     </div>
   );
 };
-//  Using Reference Hook for DOM Manipulate
 export default App;
+```
 
+### Using Reference Hook for DOM Manipulate
+
+```javascript
 import { useRef } from "react";
 
 const App = () => {
@@ -445,7 +456,7 @@ export default App;
 
 ```
 
-## Using useRef Attribute Manipulate
+### Using useRef Image Attribute Manipulate
 
 ```javascript
 import { useRef } from "react";
@@ -468,6 +479,125 @@ const App = () => {
 export default App;
 ```
 
+### UseRef input Value
+
+```javascript
+import { useRef } from "react";
+
+const App = () => {
+  let firstName = useRef();
+  let lastName = useRef();
+  const change = () => {
+    let FName = firstName.current.value;
+    let LName = lastName.current.value;
+    alert(FName + " " + LName);
+  };
+
+  return (
+    <div>
+      <input ref={firstName} type="text" placeholder="First Name" /> <br />
+      <input ref={lastName} type="text" placeholder="First Name" />
+      <br />
+      <button onClick={change}>Click</button>
+    </div>
+  );
+};
+
+export default App;
+```
+
+<!-- Here is problem Occur multiple time used useRef -->
+
+```javascript
+import { useRef } from "react";
+
+const App = () => {
+  let firstName,
+    lastName = useRef();
+
+  const change = () => {
+    let FName = firstName.value;
+    let LName = lastName.value;
+    alert(FName + " " + LName);
+  };
+
+  return (
+    <div>
+      <input
+        ref={(a) => (firstName = a)}
+        type="text"
+        placeholder="First Name"
+      />
+      <br />
+      // Here Using arrow function that is solve the problem
+      <input ref={(a) => (lastName = a)} type="text" placeholder="First Name" />
+      <br />
+      <button onClick={change}>Click</button>
+    </div>
+  );
+};
+
+export default App;
+```
+
+### UseRef Method Create Persisted Mutable Values
+
+```javascript
+import { useRef } from "react";
+
+const App = () => {
+  let number = useRef(0);
+  const change = () => {
+    number.current++;
+    console.log(`Clicked ${number.current} times `);
+  };
+
+  return (
+    <div>
+      <button onClick={change}>Click</button>
+    </div>
+  );
+};
+
+export default App;
+```
+
+### useRef Caching expensive computations
+
+```javascript
+import { useRef } from "react";
+
+const App = () => {
+  const expensiveResultRef = useRef(null);
+  const myDiv = useRef();
+
+  const fetchData = async () => {
+    const res = await fetch("https://dummyjson.com/products");
+    expensiveResultRef.current = await res.json();
+  };
+
+  const showData = () => {
+    myDiv.current.innerHTML = JSON.stringify(expensiveResultRef.current);
+  };
+
+  return (
+    <div>
+      <button className="mr-8 ml-3 mt-3 bg-slate-400" onClick={fetchData}>
+        Call API
+      </button>
+
+      <button className=" bg-slate-500" onClick={showData}>
+        Show Data
+      </button>
+
+      <div ref={myDiv}></div>
+    </div>
+  );
+};
+
+export default App;
+```
+
 ## Use State
 
 ### Number Change
@@ -482,6 +612,38 @@ const App = () => {
   return (
     <div>
       <h1>Number: {Number}</h1>
+      <button onClick={change}>Click</button>
+    </div>
+  );
+};
+
+export default App;
+```
+
+## UseState using change useRef
+
+```javascript
+import React, { useRef, useState } from "react";
+
+const App = () => {
+  const myImage = useRef(null);
+  const [isFirstImage, setIsFirstImage] = useState(true);
+
+  const change = () => {
+    if (isFirstImage) {
+      myImage.current.src = "/public/stickman-with-todo-list.svg";
+      myImage.current.setAttribute("height", "100px");
+      myImage.current.setAttribute("width", "100px");
+    } else {
+      myImage.current.src = "/public/images.png";
+    }
+    setIsFirstImage(!isFirstImage);
+  };
+
+  return (
+    <div>
+      {/* Attach the ref to the img element */}
+      <img ref={myImage} src="/public/images.png" alt="My Image" />
       <button onClick={change}>Click</button>
     </div>
   );
@@ -549,69 +711,74 @@ export default function App() {
   );
 }
 ```
+
 # Use Effect
 
-## Without Dependency 
+## Without Dependency
 
 ```javascript
 export default function App() {
-  const [count,setcount]=useState(0)
-// Without dependency call with every rendering change effect 
-useEffect(()=>{
-  console.log("Use Effect")
-})
+  const [count, setcount] = useState(0);
+  // Without dependency call with every rendering change effect
+  useEffect(() => {
+    console.log("Use Effect");
+  });
   return (
     <div>
       {console.log("Rendering")}
       <h1>Count :{count}</h1>
-      <button onClick={()=>setcount(count=>count+1)}>➕</button>
+      <button onClick={() => setcount((count) => count + 1)}>➕</button>
     </div>
-  )
+  );
 }
 ```
+
 ## with Dependency Empty
 
 ```javascript
 export default function App() {
-  const [count,setcount]=useState(0)
-// with dependency call with 1st rendering change useEffect.
-useEffect(()=>{
-  console.log("Use Effect")
-},[])
+  const [count, setcount] = useState(0);
+  // with dependency call with 1st rendering change useEffect.
+  useEffect(() => {
+    console.log("Use Effect");
+  }, []);
   return (
     <div>
       {console.log("Rendering")}
       <h1>Count :{count}</h1>
-      <button onClick={()=>setcount(count=>count+1)}>➕</button>
+      <button onClick={() => setcount((count) => count + 1)}>➕</button>
     </div>
-  )
+  );
 }
 ```
+
 ## with Dependency with Variable
 
 ```javascript
 export default function App() {
-  const [count,setcount]=useState(0)
-// with dependency call with variable after change variable rendering and useEffect change.
-useEffect(()=>{
-  console.log("Use Effect")
-},[count])
+  const [count, setcount] = useState(0);
+  // with dependency call with variable after change variable rendering and useEffect change.
+  useEffect(() => {
+    console.log("Use Effect");
+  }, [count]);
   return (
     <div>
       {console.log("Rendering")}
       <h1>Count :{count}</h1>
-      <button onClick={()=>setcount(count=>count+1)}>➕</button>
+      <button onClick={() => setcount((count) => count + 1)}>➕</button>
     </div>
-  )
+  );
 }
 ```
-### Data Fetch
 
+### Data Fetch
 
 ```javascript
 import React, { useEffect, useState } from "react";
 const todoloding = <p>Todo is loading</p>;
-const errorm = <p className=" text-red-700 font-bold">URL is not fetched properly</p>;
+const errorm = (
+  <p className=" text-red-700 font-bold">URL is not fetched properly</p>
+);
 function DataFetch() {
   const [todos, setTodos] = useState(null);
   const [isloading, setLoading] = useState(true);
@@ -640,8 +807,6 @@ function DataFetch() {
     }, 1000);
   }, []);
 
-
-
   return (
     <div className="ml-6">
       <h1 className=" text-3xl text-center">Todos Mapping</h1>
@@ -662,3 +827,120 @@ function DataFetch() {
 export default DataFetch;
 ```
 
+# UseEffect using async function
+
+```javascript
+import React, { useEffect, useState } from "react";
+
+const todoloding = <p>Todo is loading</p>;
+const errorm = (
+  <p className="text-red-700 font-bold">URL is not fetched properly</p>
+);
+
+async function fetchData() {
+  const response = await fetch("https://jsonplaceholder.typicode.com/todos");
+  if (!response.ok) {
+    throw new Error("URL is not fetched properly");
+  }
+  return response.json();
+}
+
+function DataFetch() {
+  const [todos, setTodos] = useState(null);
+  const [isloading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setTimeout(async () => {
+      try {
+        const data = await fetchData();
+        setTodos(data);
+        setError(null);
+      } catch (error) {
+        setError(error.message);
+        setTodos(null);
+      } finally {
+        setLoading(false);
+      }
+    }, 1000);
+  }, []);
+
+  return (
+    <div className="ml-6">
+      <h1 className="text-3xl text-center">Todos Mapping</h1>
+      {error && errorm}
+      {isloading && todoloding}
+      {todos &&
+        todos.map((value, index) => {
+          return (
+            <li className="ml-6" key={index}>
+              {value.title}
+            </li>
+          );
+        })}
+    </div>
+  );
+}
+
+export default DataFetch;
+```
+
+# Visible and Usememo
+
+```javascript
+import { useState } from "react";
+
+import Hero from "./component/Hero";
+
+export default function App() {
+  const [vasiable, setVasiable] = useState(true);
+
+  const [count, setCount] = useState(0);
+  const toggle = () => {
+    setVasiable(!vasiable);
+  };
+  const Increment = () => {
+    setCount(count + 1);
+  };
+  console.log("App")
+
+
+  return (
+    <div>
+      <div className=" flex justify-start space-x-2">
+        <button onClick={toggle}>toggle</button>
+        {vasiable ? <h1> ON</h1> : <h1>Off</h1>}
+      </div>
+      <h1>Count:{count}</h1>
+      <Hero Increment={Increment} sendmessage={count}/>
+    </div>
+  );
+}
+
+
+// Hero.js
+// import PropTypes from 'prop-types';
+
+import { memo } from "react";
+import { useMemo } from "react";
+
+function Hero(prop) {
+  const claculatedNumber = useMemo(() => {
+    let number = 0;
+    for (let index = 0; index < 500000000; index++) {
+      number++;
+    }
+    return number;
+  }, []);
+ console.log("Hook is rendering")
+  return (
+    <div>
+      <h1>Number is {claculatedNumber}</h1>
+      <p>Send {prop.sendmessage} Message</p>
+      <button onClick={prop.Increment}>Increment</button>
+    </div>
+  );
+}
+
+export default Hero;
+```
